@@ -50,3 +50,14 @@ type MarketOrder struct {
 	Total    float64
 	Sum      float64
 }
+
+type HttpResponseOrderBook struct {
+	Message string
+	Status  string
+	Data    *OrderBookData
+}
+
+type OrderBookData struct {
+	Buy  *[]MarketOrder
+	Sell *[]MarketOrder
+}

@@ -57,6 +57,35 @@ func (api *MarketAPI) GetMarketSellOrders(market string) (*HttpResponseMarketOrd
 	return json, nil
 }
 
+// GetMarketOrderBook - Allow you to keep track of the state of Tokenize order books on a price aggregated basis with customizable precision.
+// @params:
+// - market [string] (required): The market, eg: "MYR-BTC";
+// - orderType [string] (optional): "buy" | "sell" | "both" | "";
+// - limit [int]: Limit numbers of order book to return;
+func (api *MarketAPI) GetMarketOrderBook(market string, orderType string, limit int) (*HttpResponseOrderBook, error) {
+	if market == "" {
+		return nil, errors.New("Missing required parameter: market [string]")
+	}
+
+	queryParams := req.QueryParam{
+		"market": market,
+		"type":   orderType,
+		"limit":  limit,
+	}
+	resp, err := req.Get(api.endpoint+"/orderbook", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseOrderBook{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	return json, nil
+}
+
 // NewMarketAPI - MarketAPI constructor
 func NewMarketAPI(httpManager *HttpManager) *MarketAPI {
 	return &MarketAPI{
