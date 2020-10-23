@@ -1,4 +1,4 @@
-package tkxclient
+package tkxsdk
 
 import (
 	"github.com/imroc/req"

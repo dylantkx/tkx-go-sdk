@@ -3,10 +3,10 @@ package test
 import (
 	"github.com/joho/godotenv"
 	"os"
-	"tkx-api-client"
+	"tkx-go-sdk"
 )
 
-var tkxClient *tkxclient.APIClient
+var apiClient *tkxsdk.APIClient
 
 // SetupTestEnv - Set up test environment
 func SetupTestEnv() {
@@ -14,7 +14,7 @@ func SetupTestEnv() {
 	clientID := os.Getenv("CLIENT_ID")
 	clientSecret := os.Getenv("CLIENT_SECRET")
 
-	tkxClient = tkxclient.NewAPIClientWithCredentials("MY", clientID, clientSecret)
+	apiClient = tkxsdk.NewAPIClientWithCredentials("MY", clientID, clientSecret)
 }
 
 // CleanUpAfterTests - Clean up after tests

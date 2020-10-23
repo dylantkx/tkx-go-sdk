@@ -1,4 +1,4 @@
-package tkxclient
+package tkxsdk
 
 type HttpResponseAccountInfo struct {
 	Message string

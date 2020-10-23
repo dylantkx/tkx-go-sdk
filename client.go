@@ -1,4 +1,4 @@
-package tkxclient
+package tkxsdk
 
 // APIClient - APIClient struct
 type APIClient struct {

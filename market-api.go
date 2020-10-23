@@ -1,4 +1,4 @@
-package tkxclient
+package tkxsdk
 
 import (
 	"errors"

@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetAccountInfo(t *testing.T) {
-	json, err := tkxClient.AccountAPI.GetAccountInfo()
+	json, err := apiClient.AccountAPI.GetAccountInfo()
 	if err != nil {
 		t.Error(err)
 	}
@@ -17,7 +17,7 @@ func TestGetAccountInfo(t *testing.T) {
 }
 
 func TestGetAccountBalances(t *testing.T) {
-	json, err := tkxClient.AccountAPI.GetAccountBalances()
+	json, err := apiClient.AccountAPI.GetAccountBalances()
 	if err != nil {
 		t.Error(err)
 	}

@@ -7,7 +7,7 @@ import (
 
 func TestGetMarketBuyOrders(t *testing.T) {
 	market := "MYR-BTC"
-	json, err := tkxClient.MarketAPI.GetMarketBuyOrders(market)
+	json, err := apiClient.MarketAPI.GetMarketBuyOrders(market)
 	if err != nil {
 		t.Error(err)
 	}
@@ -19,7 +19,7 @@ func TestGetMarketBuyOrders(t *testing.T) {
 
 func TestGetMarketSellOrders(t *testing.T) {
 	market := "MYR-BTC"
-	json, err := tkxClient.MarketAPI.GetMarketSellOrders(market)
+	json, err := apiClient.MarketAPI.GetMarketSellOrders(market)
 	if err != nil {
 		t.Error(err)
 	}

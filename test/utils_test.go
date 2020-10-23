@@ -3,13 +3,13 @@ package test
 import (
 	"reflect"
 	"testing"
-	"tkx-api-client"
+	"tkx-go-sdk"
 )
 
 func TestTokenGenerator(t *testing.T) {
 	clientID := "4A0A9B12D33F57B816EC"
 	clientSecret := "secret"
-	g := &tkxclient.TokenGenerator{}
+	g := &tkxsdk.TokenGenerator{}
 	token, err := g.Generate(clientID, clientSecret)
 	if err != nil {
 		t.Error(err)
