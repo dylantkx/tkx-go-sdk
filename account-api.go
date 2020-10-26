@@ -10,6 +10,14 @@ type AccountAPI struct {
 	endpoint    string
 }
 
+// NewAccountAPI - AccountAPI constructor
+func NewAccountAPI(httpManager *HttpManager) *AccountAPI {
+	return &AccountAPI{
+		httpManager: httpManager,
+		endpoint:    httpManager.baseURL + "/account",
+	}
+}
+
 // GetAccountInfo - Use to get your account information
 func (api *AccountAPI) GetAccountInfo() (*HttpResponseAccountInfo, error) {
 	resp, err := req.Get(api.endpoint, api.httpManager.header)
@@ -40,12 +48,4 @@ func (api *AccountAPI) GetAccountBalances() (*HttpResponseAccountBalances, error
 	}
 
 	return json, nil
-}
-
-// NewAccountAPI - AccountAPI constructor
-func NewAccountAPI(httpManager *HttpManager) *AccountAPI {
-	return &AccountAPI{
-		httpManager: httpManager,
-		endpoint:    httpManager.baseURL + "/account",
-	}
 }

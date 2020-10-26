@@ -11,6 +11,14 @@ type MarketAPI struct {
 	endpoint    string
 }
 
+// NewMarketAPI - MarketAPI constructor
+func NewMarketAPI(httpManager *HttpManager) *MarketAPI {
+	return &MarketAPI{
+		httpManager: httpManager,
+		endpoint:    httpManager.baseURL + "/market",
+	}
+}
+
 // GetMarketBuyOrders - Get all currently buy orders in Tokenize specified by market
 func (api *MarketAPI) GetMarketBuyOrders(market string) (*HttpResponseMarketOrders, error) {
 	if market == "" {
@@ -84,12 +92,4 @@ func (api *MarketAPI) GetMarketOrderBook(market string, orderType string, limit 
 	}
 
 	return json, nil
-}
-
-// NewMarketAPI - MarketAPI constructor
-func NewMarketAPI(httpManager *HttpManager) *MarketAPI {
-	return &MarketAPI{
-		httpManager: httpManager,
-		endpoint:    httpManager.baseURL + "/market",
-	}
 }
