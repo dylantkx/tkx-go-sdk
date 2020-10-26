@@ -6,6 +6,7 @@ type APIClient struct {
 	httpManager *HttpManager
 	AccountAPI  *AccountAPI
 	MarketAPI   *MarketAPI
+	OrderAPI    *OrderAPI
 }
 
 // NewAPIClient - APIClient constructor
@@ -29,4 +30,5 @@ func (c *APIClient) Init() {
 	c.httpManager = NewHttpManager(c.region)
 	c.AccountAPI = NewAccountAPI(c.httpManager)
 	c.MarketAPI = NewMarketAPI(c.httpManager)
+	c.OrderAPI = NewOrderAPI(c.httpManager)
 }

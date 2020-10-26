@@ -18,6 +18,7 @@ var (
 type HttpManager struct {
 	region      string
 	baseURL     string
+	domain      string
 	credentials ClientCredentials
 	header      req.Header
 }
@@ -27,6 +28,31 @@ type ClientCredentials struct {
 	ClientID     string
 	ClientSecret string
 	Token        string
+}
+
+// NewHttpManager - HttpManager constructor
+func NewHttpManager(region string) *HttpManager {
+	m := &HttpManager{
+		region: region,
+	}
+
+	switch m.region {
+	case "MY":
+		m.domain = domainMY
+		break
+	case "SG":
+		m.domain = domainSG
+		break
+	default:
+		m.domain = domainGobal
+	}
+	m.baseURL = fmt.Sprintf("%s://%s.%s%s", defaultScheme, subdomain, m.domain, prefix)
+	m.header = req.Header{
+		"Content-Type": "application/json",
+		"Accept":       "application/json",
+	}
+
+	return m
 }
 
 // SetCredentials - Set client's credentials (id + secret)
@@ -41,42 +67,4 @@ func (m *HttpManager) SetCredentials(id, secret string) *HttpManager {
 	m.credentials.Token = token
 	m.header["X-TKX-TOKEN"] = m.credentials.Token
 	return m
-}
-
-// Init - Initialize HttpManager object
-func (m *HttpManager) Init() {
-	m.constructBaseURL()
-	m.constructHeader()
-}
-
-// NewHttpManager - HttpManager constructor
-func NewHttpManager(region string) *HttpManager {
-	m := &HttpManager{
-		region: region,
-	}
-	m.Init()
-	return m
-}
-
-// #Region: private methods
-func (m *HttpManager) constructBaseURL() {
-	var domain string
-	switch m.region {
-	case "MY":
-		domain = domainMY
-		break
-	case "SG":
-		domain = domainSG
-	default:
-		domain = domainGobal
-	}
-	m.baseURL = fmt.Sprintf("%s://%s.%s%s", defaultScheme, subdomain, domain, prefix)
-}
-
-func (m *HttpManager) constructHeader() {
-	print(m.credentials.Token)
-	m.header = req.Header{
-		"Content-Type": "application/json",
-		"Accept":       "application/json",
-	}
 }

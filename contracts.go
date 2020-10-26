@@ -61,3 +61,25 @@ type OrderBookData struct {
 	Buy  *[]MarketOrder
 	Sell *[]MarketOrder
 }
+
+type HttpResponsePlaceOrder struct {
+	Message string
+	Status  string
+	Data    *PlacedOrder
+}
+
+type PlacedOrder struct {
+	OrderID          int
+	Market           string
+	TransactionTyime int
+	Price            float64
+	OriginUnits      int
+	CommissionPaid   float64
+	Type             string
+	Status           string
+}
+
+type HttpResponseSetBidOrder struct {
+	Message string
+	Status  string
+}
