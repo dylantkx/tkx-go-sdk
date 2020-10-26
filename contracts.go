@@ -78,8 +78,3 @@ type PlacedOrder struct {
 	Type             string
 	Status           string
 }
-
-type HttpResponseSetBidOrder struct {
-	Message string
-	Status  string
-}
