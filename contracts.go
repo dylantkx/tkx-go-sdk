@@ -58,8 +58,8 @@ type HttpResponseOrderBook struct {
 }
 
 type OrderBookData struct {
-	Buy  *[]MarketOrder
-	Sell *[]MarketOrder
+	Buy  []MarketOrder
+	Sell []MarketOrder
 }
 
 type HttpResponsePlaceOrder struct {

@@ -35,6 +35,23 @@ func (api *OrderAPI) PlaceMarketBuyOrder(market string, units float64) (*HttpRes
 	return api.placeBuyOrder(market, "market", units, 0)
 }
 
+// PlaceLimitSellOrder - Place a new limit sell order
+// @params:
+// - market [string] (required): The market, eg: "MYR-BTC";
+// - units [float64] (required): The amount of this order;
+// - price [float64] (required): The price of this order;
+func (api *OrderAPI) PlaceLimitSellOrder(market string, units, price float64) (*HttpResponsePlaceOrder, error) {
+	return api.placeSellOrder(market, "limit", units, price)
+}
+
+// PlaceMarketSellOrder - Place a new limit sell order
+// @params:
+// - market [string] (required): The market, eg: "MYR-BTC";
+// - units [float64] (required): The amount of this order;
+func (api *OrderAPI) PlaceMarketSellOrder(market string, units float64) (*HttpResponsePlaceOrder, error) {
+	return api.placeSellOrder(market, "market", units, 0)
+}
+
 func (api *OrderAPI) placeBuyOrder(market, orderType string, units, price float64) (*HttpResponsePlaceOrder, error) {
 	bodyMap := map[string]interface{}{
 		"market":    market,
@@ -69,7 +86,7 @@ func (api *OrderAPI) placeSellOrder(market, orderType string, units, price float
 		bodyMap["price"] = price
 	}
 	jsonBody := req.BodyJSON(bodyMap)
-	resp, err := req.Post(api.endpoint+"/buy", api.httpManager.header, jsonBody)
+	resp, err := req.Post(api.endpoint+"/sell", api.httpManager.header, jsonBody)
 	if err != nil {
 		return nil, err
 	}

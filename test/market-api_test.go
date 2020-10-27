@@ -38,6 +38,6 @@ func TestGetMarketOrderBook(t *testing.T) {
 	if json.Data == nil {
 		t.Error("Data is null")
 	}
-	fmt.Println("Order book buy order #1:", (*json.Data.Buy)[0])
-	fmt.Println("Order book sell order #1:", (*json.Data.Sell)[0])
+	fmt.Println("Order book buy order #1:", json.Data.Buy[0])
+	fmt.Println("Order book sell order #1:", json.Data.Sell[0])
 }
