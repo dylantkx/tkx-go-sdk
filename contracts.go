@@ -73,8 +73,31 @@ type PlacedOrder struct {
 	Market           string
 	TransactionTyime int
 	Price            float64
-	OriginUnits      int
+	OriginUnits      float64
 	CommissionPaid   float64
 	Type             string
 	Status           string
+}
+
+type HttpResponseMyOrders struct {
+	Message string
+	Status  string
+	Data    []MyOrder
+}
+
+type MyOrder struct {
+	OrderID        int
+	Market         string
+	Price          float64
+	OriginUnits    float64
+	FilledUnits    float64
+	CommissionPaid float64
+	Type           string
+	Status         string
+}
+
+type HttpResponseCancelOrder struct {
+	Message string
+	Status  string
+	Data    bool
 }
