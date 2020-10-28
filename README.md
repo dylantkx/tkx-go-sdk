@@ -3,7 +3,7 @@
 ## 1. Overview
 A client for Tokenize Public API implemented in Golang
 
-**Note:** This package is underdevelopment. Use at your own 
+**Note:** This package is under development. Use at your own risk.
 
 ## 2. Running tests
 To run all test cases:
