@@ -6,23 +6,17 @@ import (
 )
 
 func TestGetAccountInfo(t *testing.T) {
-	json, err := apiClient.AccountAPI.GetAccountInfo()
+	info, err := apiClient.AccountAPI.GetAccountInfo()
 	if err != nil {
 		t.Error(err)
 	}
-	if json.Data == nil {
-		t.Error("Data is null")
-	}
-	fmt.Println("Account info:", json.Data)
+	fmt.Println("Account info:", *info)
 }
 
 func TestGetAccountBalances(t *testing.T) {
-	json, err := apiClient.AccountAPI.GetAccountBalances()
+	balances, err := apiClient.AccountAPI.GetAccountBalances()
 	if err != nil {
 		t.Error(err)
 	}
-	if json.Data == nil {
-		t.Error("Data is null")
-	}
-	fmt.Println("Account balances:", json.Data)
+	fmt.Println("Account balances:", balances[0])
 }

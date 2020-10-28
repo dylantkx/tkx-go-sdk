@@ -1,6 +1,7 @@
 package tkxsdk
 
 import (
+	"errors"
 	"github.com/imroc/req"
 )
 
@@ -19,7 +20,7 @@ func NewAccountAPI(httpManager *HttpManager) *AccountAPI {
 }
 
 // GetAccountInfo - Use to get your account information
-func (api *AccountAPI) GetAccountInfo() (*HttpResponseAccountInfo, error) {
+func (api *AccountAPI) GetAccountInfo() (*AccountInfo, error) {
 	resp, err := req.Get(api.endpoint, api.httpManager.header)
 	if err != nil {
 		return nil, err
@@ -31,11 +32,15 @@ func (api *AccountAPI) GetAccountInfo() (*HttpResponseAccountInfo, error) {
 		return nil, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
 }
 
 // GetAccountBalances - Use to retrieve all balances from your account
-func (api *AccountAPI) GetAccountBalances() (*HttpResponseAccountBalances, error) {
+func (api *AccountAPI) GetAccountBalances() ([]AccountBalance, error) {
 	resp, err := req.Get(api.endpoint+"/balances", api.httpManager.header)
 	if err != nil {
 		return nil, err
@@ -47,5 +52,9 @@ func (api *AccountAPI) GetAccountBalances() (*HttpResponseAccountBalances, error
 		return nil, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
 }

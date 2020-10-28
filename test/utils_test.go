@@ -1,9 +1,9 @@
 package test
 
 import (
+	"github.com/dylantkx/tkx-go-sdk"
 	"reflect"
 	"testing"
-	"tkx-go-sdk"
 )
 
 func TestTokenGenerator(t *testing.T) {

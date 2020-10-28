@@ -1,6 +1,7 @@
 package tkxsdk
 
 import (
+	"errors"
 	"github.com/imroc/req"
 	"strconv"
 )
@@ -19,22 +20,28 @@ func NewOrderAPI(httpManager *HttpManager) *OrderAPI {
 	}
 }
 
-func (api *OrderAPI) CancelOrder(id int) (*HttpResponseCancelOrder, error) {
+// CancelOrder - Cancel one order
+func (api *OrderAPI) CancelOrder(id int) (bool, error) {
 	resp, err := req.Delete(api.endpoint+"/"+strconv.Itoa(id), api.httpManager.header)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	json := &HttpResponseCancelOrder{}
 	parsingError := resp.ToJSON(&json)
 	if parsingError != nil {
-		return nil, parsingError
+		return false, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return false, errors.New(json.Message)
+	}
+
+	return json.Data, nil
 }
 
-func (api *OrderAPI) GetMyOrders(market string) (*HttpResponseMyOrders, error) {
+// GetMyOrders - Get all orders of this account
+func (api *OrderAPI) GetMyOrders(market string) ([]MyOrder, error) {
 	// TODO: Find a way to execute these two requests concurrently
 	b, err1 := api.GetMyBuyOrders(market)
 	if err1 != nil {
@@ -44,15 +51,11 @@ func (api *OrderAPI) GetMyOrders(market string) (*HttpResponseMyOrders, error) {
 	if err2 != nil {
 		return nil, err2
 	}
-	ret := &HttpResponseMyOrders{
-		Status:  "success",
-		Message: "",
-		Data:    append(b.Data, s.Data...),
-	}
-	return ret, nil
+	return append(b, s...), nil
 }
 
-func (api *OrderAPI) GetMyPendingBuyOrders(market string) (*HttpResponseMyOrders, error) {
+// GetMyPendingBuyOrders - Gets all PENDING buy orders of this account
+func (api *OrderAPI) GetMyPendingBuyOrders(market string) ([]MyOrder, error) {
 	queryParams := req.QueryParam{
 		"market": market,
 	}
@@ -67,10 +70,15 @@ func (api *OrderAPI) GetMyPendingBuyOrders(market string) (*HttpResponseMyOrders
 		return nil, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
 }
 
-func (api *OrderAPI) GetMyPendingSellOrders(market string) (*HttpResponseMyOrders, error) {
+// GetMyPendingSellOrders - Gets all PENDING sell orders of this account
+func (api *OrderAPI) GetMyPendingSellOrders(market string) ([]MyOrder, error) {
 	queryParams := req.QueryParam{
 		"market": market,
 	}
@@ -85,10 +93,15 @@ func (api *OrderAPI) GetMyPendingSellOrders(market string) (*HttpResponseMyOrder
 		return nil, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
 }
 
-func (api *OrderAPI) GetMyBuyOrders(market string) (*HttpResponseMyOrders, error) {
+// GetMyBuyOrders - Gets all buy orders of this account
+func (api *OrderAPI) GetMyBuyOrders(market string) ([]MyOrder, error) {
 	queryParams := req.QueryParam{
 		"market": market,
 	}
@@ -103,10 +116,15 @@ func (api *OrderAPI) GetMyBuyOrders(market string) (*HttpResponseMyOrders, error
 		return nil, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
 }
 
-func (api *OrderAPI) GetMySellOrders(market string) (*HttpResponseMyOrders, error) {
+// GetMySellOrders - Gets all sell orders of this account
+func (api *OrderAPI) GetMySellOrders(market string) ([]MyOrder, error) {
 	queryParams := req.QueryParam{
 		"market": market,
 	}
@@ -121,7 +139,11 @@ func (api *OrderAPI) GetMySellOrders(market string) (*HttpResponseMyOrders, erro
 		return nil, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
 }
 
 // PlaceLimitBuyOrder - Place a new limit buy order
@@ -129,7 +151,7 @@ func (api *OrderAPI) GetMySellOrders(market string) (*HttpResponseMyOrders, erro
 // - market [string] (required): The market, eg: "MYR-BTC";
 // - units [float64] (required): The amount of this order;
 // - price [float64] (required): The price of this order;
-func (api *OrderAPI) PlaceLimitBuyOrder(market string, units, price float64) (*HttpResponsePlaceOrder, error) {
+func (api *OrderAPI) PlaceLimitBuyOrder(market string, units, price float64) (*PlacedOrder, error) {
 	return api.placeBuyOrder(market, "limit", units, price)
 }
 
@@ -137,7 +159,7 @@ func (api *OrderAPI) PlaceLimitBuyOrder(market string, units, price float64) (*H
 // @params:
 // - market [string] (required): The market, eg: "MYR-BTC";
 // - units [float64] (required): The amount of this order;
-func (api *OrderAPI) PlaceMarketBuyOrder(market string, units float64) (*HttpResponsePlaceOrder, error) {
+func (api *OrderAPI) PlaceMarketBuyOrder(market string, units float64) (*PlacedOrder, error) {
 	return api.placeBuyOrder(market, "market", units, 0)
 }
 
@@ -146,7 +168,7 @@ func (api *OrderAPI) PlaceMarketBuyOrder(market string, units float64) (*HttpRes
 // - market [string] (required): The market, eg: "MYR-BTC";
 // - units [float64] (required): The amount of this order;
 // - price [float64] (required): The price of this order;
-func (api *OrderAPI) PlaceLimitSellOrder(market string, units, price float64) (*HttpResponsePlaceOrder, error) {
+func (api *OrderAPI) PlaceLimitSellOrder(market string, units, price float64) (*PlacedOrder, error) {
 	return api.placeSellOrder(market, "limit", units, price)
 }
 
@@ -154,11 +176,11 @@ func (api *OrderAPI) PlaceLimitSellOrder(market string, units, price float64) (*
 // @params:
 // - market [string] (required): The market, eg: "MYR-BTC";
 // - units [float64] (required): The amount of this order;
-func (api *OrderAPI) PlaceMarketSellOrder(market string, units float64) (*HttpResponsePlaceOrder, error) {
+func (api *OrderAPI) PlaceMarketSellOrder(market string, units float64) (*PlacedOrder, error) {
 	return api.placeSellOrder(market, "market", units, 0)
 }
 
-func (api *OrderAPI) placeBuyOrder(market, orderType string, units, price float64) (*HttpResponsePlaceOrder, error) {
+func (api *OrderAPI) placeBuyOrder(market, orderType string, units, price float64) (*PlacedOrder, error) {
 	bodyMap := map[string]interface{}{
 		"market":    market,
 		"orderType": orderType,
@@ -179,10 +201,14 @@ func (api *OrderAPI) placeBuyOrder(market, orderType string, units, price float6
 		return nil, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
 }
 
-func (api *OrderAPI) placeSellOrder(market, orderType string, units, price float64) (*HttpResponsePlaceOrder, error) {
+func (api *OrderAPI) placeSellOrder(market, orderType string, units, price float64) (*PlacedOrder, error) {
 	bodyMap := map[string]interface{}{
 		"market":    market,
 		"orderType": orderType,
@@ -203,5 +229,9 @@ func (api *OrderAPI) placeSellOrder(market, orderType string, units, price float
 		return nil, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
 }

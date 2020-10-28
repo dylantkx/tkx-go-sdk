@@ -20,7 +20,7 @@ func NewMarketAPI(httpManager *HttpManager) *MarketAPI {
 }
 
 // GetMarketBuyOrders - Get all currently buy orders in Tokenize specified by market
-func (api *MarketAPI) GetMarketBuyOrders(market string) (*HttpResponseMarketOrders, error) {
+func (api *MarketAPI) GetMarketBuyOrders(market string) ([]MarketOrder, error) {
 	if market == "" {
 		return nil, errors.New("Missing required parameter: market [string]")
 	}
@@ -39,11 +39,15 @@ func (api *MarketAPI) GetMarketBuyOrders(market string) (*HttpResponseMarketOrde
 		return nil, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data.Orders, nil
 }
 
 // GetMarketSellOrders - Get all currently sell orders in Tokenize specified by market
-func (api *MarketAPI) GetMarketSellOrders(market string) (*HttpResponseMarketOrders, error) {
+func (api *MarketAPI) GetMarketSellOrders(market string) ([]MarketOrder, error) {
 	if market == "" {
 		return nil, errors.New("Missing required parameter: market [string]")
 	}
@@ -62,7 +66,11 @@ func (api *MarketAPI) GetMarketSellOrders(market string) (*HttpResponseMarketOrd
 		return nil, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data.Orders, nil
 }
 
 // GetMarketOrderBook - Allow you to keep track of the state of Tokenize order books on a price aggregated basis with customizable precision.
@@ -70,7 +78,7 @@ func (api *MarketAPI) GetMarketSellOrders(market string) (*HttpResponseMarketOrd
 // - market [string] (required): The market, eg: "MYR-BTC";
 // - orderType [string] (optional): "buy" | "sell" | "both" | "";
 // - limit [int]: Limit numbers of order book to return;
-func (api *MarketAPI) GetMarketOrderBook(market string, orderType string, limit int) (*HttpResponseOrderBook, error) {
+func (api *MarketAPI) GetMarketOrderBook(market string, orderType string, limit int) (*OrderBookData, error) {
 	if market == "" {
 		return nil, errors.New("Missing required parameter: market [string]")
 	}
@@ -91,5 +99,9 @@ func (api *MarketAPI) GetMarketOrderBook(market string, orderType string, limit 
 		return nil, parsingError
 	}
 
-	return json, nil
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
 }

@@ -1,9 +1,9 @@
 package test
 
 import (
+	"github.com/dylantkx/tkx-go-sdk"
 	"github.com/joho/godotenv"
 	"os"
-	"tkx-go-sdk"
 )
 
 var apiClient *tkxsdk.APIClient

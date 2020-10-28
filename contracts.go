@@ -22,7 +22,7 @@ type AccountInfo struct {
 type HttpResponseAccountBalances struct {
 	Message string
 	Status  string
-	Data    *[]AccountBalance
+	Data    []AccountBalance
 }
 
 type AccountBalance struct {
@@ -41,7 +41,7 @@ type HttpResponseMarketOrders struct {
 
 type MarketOrderData struct {
 	Market string
-	Orders *[]MarketOrder
+	Orders []MarketOrder
 }
 
 type MarketOrder struct {
