@@ -2,6 +2,7 @@ package tkxsdk
 
 import (
 	"github.com/imroc/req"
+	"strconv"
 )
 
 // OrderAPI - OrderAPI struct
@@ -16,6 +17,111 @@ func NewOrderAPI(httpManager *HttpManager) *OrderAPI {
 		httpManager: httpManager,
 		endpoint:    httpManager.baseURL + "/order",
 	}
+}
+
+func (api *OrderAPI) CancelOrder(id int) (*HttpResponseCancelOrder, error) {
+	resp, err := req.Delete(api.endpoint+"/"+strconv.Itoa(id), api.httpManager.header)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseCancelOrder{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	return json, nil
+}
+
+func (api *OrderAPI) GetMyOrders(market string) (*HttpResponseMyOrders, error) {
+	// TODO: Find a way to execute these two requests concurrently
+	b, err1 := api.GetMyBuyOrders(market)
+	if err1 != nil {
+		return nil, err1
+	}
+	s, err2 := api.GetMySellOrders(market)
+	if err2 != nil {
+		return nil, err2
+	}
+	ret := &HttpResponseMyOrders{
+		Status:  "success",
+		Message: "",
+		Data:    append(b.Data, s.Data...),
+	}
+	return ret, nil
+}
+
+func (api *OrderAPI) GetMyPendingBuyOrders(market string) (*HttpResponseMyOrders, error) {
+	queryParams := req.QueryParam{
+		"market": market,
+	}
+	resp, err := req.Get(api.endpoint+"/buy/open", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseMyOrders{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	return json, nil
+}
+
+func (api *OrderAPI) GetMyPendingSellOrders(market string) (*HttpResponseMyOrders, error) {
+	queryParams := req.QueryParam{
+		"market": market,
+	}
+	resp, err := req.Get(api.endpoint+"/sell/open", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseMyOrders{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	return json, nil
+}
+
+func (api *OrderAPI) GetMyBuyOrders(market string) (*HttpResponseMyOrders, error) {
+	queryParams := req.QueryParam{
+		"market": market,
+	}
+	resp, err := req.Get(api.endpoint+"/buy/all", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseMyOrders{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	return json, nil
+}
+
+func (api *OrderAPI) GetMySellOrders(market string) (*HttpResponseMyOrders, error) {
+	queryParams := req.QueryParam{
+		"market": market,
+	}
+	resp, err := req.Get(api.endpoint+"/sell/all", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseMyOrders{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	return json, nil
 }
 
 // PlaceLimitBuyOrder - Place a new limit buy order

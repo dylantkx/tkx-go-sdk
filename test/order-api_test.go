@@ -70,3 +70,59 @@ func TestPlaceMarketSellOrder(t *testing.T) {
 	}
 	fmt.Println("Order placed:", json.Data)
 }
+
+func TestGetMySellOrders(t *testing.T) {
+	market := "MYR-BTC"
+	json, err := apiClient.OrderAPI.GetMySellOrders(market)
+	if err != nil {
+		t.Error(err)
+	}
+	if json.Status != "success" {
+		t.Error(json.Message)
+	}
+	if json.Data == nil {
+		t.Error("Data is null")
+	}
+	fmt.Println("My sell orders:", json.Data)
+}
+
+func TestGetMyBuyOrders(t *testing.T) {
+	market := "MYR-BTC"
+	json, err := apiClient.OrderAPI.GetMyBuyOrders(market)
+	if err != nil {
+		t.Error(err)
+	}
+	if json.Status != "success" {
+		t.Error(json.Message)
+	}
+	if json.Data == nil {
+		t.Error("Data is null")
+	}
+	fmt.Println("My buy orders:", json.Data)
+}
+
+func TestGetMyOrders(t *testing.T) {
+	market := "MYR-BTC"
+	json, err := apiClient.OrderAPI.GetMyOrders(market)
+	if err != nil {
+		t.Error(err)
+	}
+	if json.Status != "success" {
+		t.Error(json.Message)
+	}
+	if json.Data == nil {
+		t.Error("Data is null")
+	}
+	fmt.Println("My orders:", json.Data)
+}
+
+func TestCancelOrder(t *testing.T) {
+	resp, err := apiClient.OrderAPI.CancelOrder(2226310)
+	if err != nil {
+		t.Error(err)
+	}
+	if resp.Status != "success" {
+		t.Error(resp.Message)
+	}
+	fmt.Println("Order is cancelled?", resp.Data)
+}
