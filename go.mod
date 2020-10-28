@@ -1,4 +1,4 @@
-module tkx-go-sdk
+module github.com/dylantkx/tkx-go-sdk
 
 go 1.15
 
