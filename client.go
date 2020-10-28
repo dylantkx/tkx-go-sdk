@@ -2,7 +2,6 @@ package tkxsdk
 
 // APIClient - APIClient struct
 type APIClient struct {
-	region      string
 	httpManager *HttpManager
 	AccountAPI  *AccountAPI
 	MarketAPI   *MarketAPI
@@ -10,24 +9,22 @@ type APIClient struct {
 }
 
 // NewAPIClient - APIClient constructor
-func NewAPIClient(region string) *APIClient {
-	c := &APIClient{
-		region: region,
-	}
-	c.Init()
+func NewAPIClient(apiBaseURL string) *APIClient {
+	c := &APIClient{}
+	c.httpManager = NewHttpManager(apiBaseURL)
+	c.InitSubAPIs()
 	return c
 }
 
 // NewAPIClientWithCredentials - APIClient factory (create with params)
-func NewAPIClientWithCredentials(region, clientID, clientSecret string) *APIClient {
-	client := NewAPIClient(region)
+func NewAPIClientWithCredentials(apiBaseURL, clientID, clientSecret string) *APIClient {
+	client := NewAPIClient(apiBaseURL)
 	client.httpManager.SetCredentials(clientID, clientSecret)
 	return client
 }
 
-// Init - Initialize client's dependencies
-func (c *APIClient) Init() {
-	c.httpManager = NewHttpManager(c.region)
+// InitSubAPIs - Initialize sub APIs
+func (c *APIClient) InitSubAPIs() {
 	c.AccountAPI = NewAccountAPI(c.httpManager)
 	c.MarketAPI = NewMarketAPI(c.httpManager)
 	c.OrderAPI = NewOrderAPI(c.httpManager)

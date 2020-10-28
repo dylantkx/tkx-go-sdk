@@ -13,8 +13,8 @@ func SetupTestEnv() {
 	godotenv.Load("../.env")
 	clientID := os.Getenv("CLIENT_ID")
 	clientSecret := os.Getenv("CLIENT_SECRET")
-
-	apiClient = tkxsdk.NewAPIClientWithCredentials("MY", clientID, clientSecret)
+	apiBaseURL := "https://api.tokenize-my.com/public/v1"
+	apiClient = tkxsdk.NewAPIClientWithCredentials(apiBaseURL, clientID, clientSecret)
 }
 
 // CleanUpAfterTests - Clean up after tests
