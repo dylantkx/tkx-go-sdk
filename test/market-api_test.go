@@ -66,6 +66,15 @@ func TestGetMarketAvgPrice(t *testing.T) {
 	fmt.Println("Market avg price:", *avgPrice)
 }
 
+func TestGetMarketTicker24h(t *testing.T) {
+	market := "MYR-BTC"
+	ticker, err := apiClient.MarketAPI.GetMarketTicker24h(market)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println("Market ticker 24h:", *ticker)
+}
+
 func TestGetMarketOrderBook(t *testing.T) {
 	market := "MYR-BTC"
 	orderbook, err := apiClient.MarketAPI.GetMarketOrderBook(market, "both", 5)

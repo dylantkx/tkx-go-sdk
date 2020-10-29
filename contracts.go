@@ -84,6 +84,22 @@ type MarketAvgPrice struct {
 	AvgPrice float64
 }
 
+type HttpResponseGetMarketTicker24h struct {
+	Message string
+	Status  string
+	Data    *MarketTicker24h
+}
+
+type MarketTicker24h struct {
+	Market    string
+	HighPrice float64
+	LowPrice  float64
+	LastPrice float64
+	BidPrice  float64
+	AskPrice  float64
+	Volume    float64
+}
+
 type HttpResponseAccountInfo struct {
 	Message string
 	Status  string

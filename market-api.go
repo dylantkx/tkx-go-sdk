@@ -183,6 +183,31 @@ func (api *MarketAPI) GetMarketCurrentAveragePrice(market string) (*MarketAvgPri
 	return json.Data, nil
 }
 
+// GetMarketTicker24h - Get statistics change price of a market.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_24h_change_price
+func (api *MarketAPI) GetMarketTicker24h(market string) (*MarketTicker24h, error) {
+	queryParams := req.QueryParam{
+		"market": market,
+	}
+
+	resp, err := req.Get(api.endpoint+"/ticker/24h", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseGetMarketTicker24h{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
+}
+
 // GetMarketOrderBook - Allow you to keep track of the state of Tokenize order books on a price aggregated basis with customizable precision.
 // @params:
 // - market [string] (required): The market, eg: "MYR-BTC";
