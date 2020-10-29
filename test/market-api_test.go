@@ -54,7 +54,16 @@ func TestGetMarketSellOrders(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println("Market sell order #1", orders[0])
+	fmt.Println("Market sell order #1:", orders[0])
+}
+
+func TestGetMarketAvgPrice(t *testing.T) {
+	market := "MYR-BTC"
+	avgPrice, err := apiClient.MarketAPI.GetMarketCurrentAveragePrice(market)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println("Market avg price:", *avgPrice)
 }
 
 func TestGetMarketOrderBook(t *testing.T) {

@@ -73,6 +73,17 @@ type MarketSummary struct {
 	Volume    float64
 }
 
+type HttpResponseGetMarketAvgPrice struct {
+	Message string
+	Status  string
+	Data    *MarketAvgPrice
+}
+
+type MarketAvgPrice struct {
+	Market   string
+	AvgPrice float64
+}
+
 type HttpResponseAccountInfo struct {
 	Message string
 	Status  string

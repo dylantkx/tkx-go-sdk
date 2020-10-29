@@ -111,7 +111,7 @@ func (api *MarketAPI) GetMarketSummaries() ([]MarketSummary, error) {
 	return json.Data, nil
 }
 
-// GetMarketBuyOrders - Get all currently buy orders in Tokenize specified by market
+// GetMarketBuyOrders - Get all currently buy orders in Tokenize specified by market.
 // Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_market_buy_orders
 func (api *MarketAPI) GetMarketBuyOrders(market string) ([]MarketOrder, error) {
 	queryParams := req.QueryParam{
@@ -135,7 +135,7 @@ func (api *MarketAPI) GetMarketBuyOrders(market string) ([]MarketOrder, error) {
 	return json.Data.Orders, nil
 }
 
-// GetMarketSellOrders - Get all currently sell orders in Tokenize specified by market
+// GetMarketSellOrders - Get all currently sell orders in Tokenize specified by market.
 // Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_market_sell_orders
 func (api *MarketAPI) GetMarketSellOrders(market string) ([]MarketOrder, error) {
 	queryParams := req.QueryParam{
@@ -157,6 +157,30 @@ func (api *MarketAPI) GetMarketSellOrders(market string) ([]MarketOrder, error) 
 	}
 
 	return json.Data.Orders, nil
+}
+
+// GetMarketCurrentAveragePrice - Get the current average price for specified market.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_current_average_price
+func (api *MarketAPI) GetMarketCurrentAveragePrice(market string) (*MarketAvgPrice, error) {
+	queryParams := req.QueryParam{
+		"market": market,
+	}
+	resp, err := req.Get(api.endpoint+"/get-market-avg-price", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseGetMarketAvgPrice{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
 }
 
 // GetMarketOrderBook - Allow you to keep track of the state of Tokenize order books on a price aggregated basis with customizable precision.
