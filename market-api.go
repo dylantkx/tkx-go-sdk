@@ -40,6 +40,31 @@ func (api *MarketAPI) GetMarkets() ([]MarketInfo, error) {
 	return json.Data, nil
 }
 
+// GetLastMarketPrice - Get last price of the given market.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_last_market_price
+func (api *MarketAPI) GetLastMarketPrice(market string) (*MarketPrice, error) {
+	queryParams := req.QueryParam{
+		"market": market,
+	}
+
+	resp, err := req.Get(api.endpoint+"/get-last-market-price", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseGetLastMarketPrice{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
+}
+
 // GetMarketBuyOrders - Get all currently buy orders in Tokenize specified by market
 func (api *MarketAPI) GetMarketBuyOrders(market string) ([]MarketOrder, error) {
 	if market == "" {

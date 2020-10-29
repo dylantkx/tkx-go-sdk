@@ -22,6 +22,20 @@ type MarketDetail struct {
 	Floor              string
 }
 
+type HttpResponseGetLastMarketPrice struct {
+	Message string
+	Status  string
+	Data    *MarketPrice
+}
+
+type MarketPrice struct {
+	Market     string
+	BaseAsset  string
+	QuoteAsset string
+	LastPrice  string
+	PrevPrice  string
+}
+
 type HttpResponseAccountInfo struct {
 	Message string
 	Status  string

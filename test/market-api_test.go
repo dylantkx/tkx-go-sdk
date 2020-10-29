@@ -13,6 +13,15 @@ func TestGetMarkets(t *testing.T) {
 	fmt.Println("Market #1:", markets[0])
 }
 
+func TestGetLastMarketPrice(t *testing.T) {
+	market := "MYR-BTC"
+	lastPrice, err := apiClient.MarketAPI.GetLastMarketPrice(market)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println("Market #1:", *lastPrice)
+}
+
 func TestGetMarketBuyOrders(t *testing.T) {
 	market := "MYR-BTC"
 	orders, err := apiClient.MarketAPI.GetMarketBuyOrders(market)
