@@ -112,11 +112,8 @@ func (api *MarketAPI) GetMarketSummaries() ([]MarketSummary, error) {
 }
 
 // GetMarketBuyOrders - Get all currently buy orders in Tokenize specified by market
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_market_buy_orders
 func (api *MarketAPI) GetMarketBuyOrders(market string) ([]MarketOrder, error) {
-	if market == "" {
-		return nil, errors.New("Missing required parameter: market [string]")
-	}
-
 	queryParams := req.QueryParam{
 		"market": market,
 	}
