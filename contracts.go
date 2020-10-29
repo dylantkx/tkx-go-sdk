@@ -36,6 +36,23 @@ type MarketPrice struct {
 	PrevPrice  string
 }
 
+type HttpResponseGetMarketTicker struct {
+	Message string
+	Status  string
+	Data    *MarketTicker
+}
+
+type MarketTicker struct {
+	Market     string
+	BaseAsset  string
+	QuoteAsset string
+	LastPrice  string
+	BidPrice   float64
+	BidQty     float64
+	AskPrice   float64
+	AskQty     float64
+}
+
 type HttpResponseAccountInfo struct {
 	Message string
 	Status  string

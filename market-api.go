@@ -65,6 +65,31 @@ func (api *MarketAPI) GetLastMarketPrice(market string) (*MarketPrice, error) {
 	return json.Data, nil
 }
 
+// GetMarketTicker - Get ticker for specified market.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_ticker_market
+func (api *MarketAPI) GetMarketTicker(market string) (*MarketTicker, error) {
+	queryParams := req.QueryParam{
+		"market": market,
+	}
+
+	resp, err := req.Get(api.endpoint+"/ticker", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseGetMarketTicker{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
+}
+
 // GetMarketBuyOrders - Get all currently buy orders in Tokenize specified by market
 func (api *MarketAPI) GetMarketBuyOrders(market string) ([]MarketOrder, error) {
 	if market == "" {
