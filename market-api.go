@@ -212,12 +212,9 @@ func (api *MarketAPI) GetMarketTicker24h(market string) (*MarketTicker24h, error
 // @params:
 // - market [string] (required): The market, eg: "MYR-BTC";
 // - orderType [string] (optional): "buy" | "sell" | "both" | "";
-// - limit [int]: Limit numbers of order book to return;
+// - limit [int]: Limit numbers of order book to return.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_order_book
 func (api *MarketAPI) GetMarketOrderBook(market string, orderType string, limit int) (*OrderBookData, error) {
-	if market == "" {
-		return nil, errors.New("Missing required parameter: market [string]")
-	}
-
 	queryParams := req.QueryParam{
 		"market": market,
 		"type":   orderType,
