@@ -31,6 +31,14 @@ func TestGetMarketTicker(t *testing.T) {
 	fmt.Println("Market ticker:", *ticker)
 }
 
+func TestGetMarketSummaries(t *testing.T) {
+	summaries, err := apiClient.MarketAPI.GetMarketSummaries()
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println("Market summary #1:", summaries[0])
+}
+
 func TestGetMarketBuyOrders(t *testing.T) {
 	market := "MYR-BTC"
 	orders, err := apiClient.MarketAPI.GetMarketBuyOrders(market)

@@ -53,6 +53,26 @@ type MarketTicker struct {
 	AskQty     float64
 }
 
+type HttpResponseGetMarketSummaries struct {
+	Message string
+	Status  string
+	Data    []MarketSummary
+}
+
+type MarketSummary struct {
+	MarketID  int
+	Market    string
+	Status    string
+	AskPrice  float64
+	BidPrice  float64
+	LastPrice float64
+	OpenPrice float64
+	PrevPrice float64
+	High      float64
+	Low       float64
+	Volume    float64
+}
+
 type HttpResponseAccountInfo struct {
 	Message string
 	Status  string
