@@ -84,3 +84,12 @@ func TestGetMarketOrderBook(t *testing.T) {
 	fmt.Println("Order book buy order #1:", orderbook.Buy[0])
 	fmt.Println("Order book sell order #1:", orderbook.Sell[0])
 }
+
+func TestGetTradeHistory(t *testing.T) {
+	market := "MYR-BTC"
+	history, err := apiClient.MarketAPI.GetTradeHistory(market, 10)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println("Market history:", history)
+}

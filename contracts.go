@@ -100,6 +100,20 @@ type MarketTicker24h struct {
 	Volume    float64
 }
 
+type HttpResponseGetMarketHistory struct {
+	Message string
+	Status  string
+	Data    []MarketHistoryRecord
+}
+
+type MarketHistoryRecord struct {
+	Timestamp int
+	Type      string
+	Amount    float64
+	Price     float64
+	Total     float64
+}
+
 type HttpResponseAccountInfo struct {
 	Message string
 	Status  string

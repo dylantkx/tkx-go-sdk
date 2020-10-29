@@ -237,3 +237,31 @@ func (api *MarketAPI) GetMarketOrderBook(market string, orderType string, limit 
 
 	return json.Data, nil
 }
+
+// GetTradeHistory - Allows the retrieval of past public trades and includes details such as price, size, and time.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_trades_histories
+func (api *MarketAPI) GetTradeHistory(market string, limit int) ([]MarketHistoryRecord, error) {
+	queryParams := req.QueryParam{
+		"market": market,
+	}
+	if limit != 0 {
+		queryParams["limit"] = limit
+	}
+
+	resp, err := req.Get(api.endpoint+"/history", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseGetMarketHistory{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
+}
