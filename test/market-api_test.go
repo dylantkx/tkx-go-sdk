@@ -5,6 +5,14 @@ import (
 	"testing"
 )
 
+func TestGetMarkets(t *testing.T) {
+	markets, err := apiClient.MarketAPI.GetMarkets()
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println("Market #1:", markets[0])
+}
+
 func TestGetMarketBuyOrders(t *testing.T) {
 	market := "MYR-BTC"
 	orders, err := apiClient.MarketAPI.GetMarketBuyOrders(market)

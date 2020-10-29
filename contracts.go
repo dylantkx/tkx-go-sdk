@@ -1,5 +1,27 @@
 package tkxsdk
 
+type HttpResponseGetMarkets struct {
+	Message string
+	Status  string
+	Data    []MarketInfo
+}
+
+type MarketInfo struct {
+	Title string
+	List  []MarketDetail
+}
+
+type MarketDetail struct {
+	MarketID           string
+	MarketName         string
+	BaseCurrency       string
+	MarketCurrency     string
+	MarketCurrencyLong string
+	Status             string
+	Ceiling            string
+	Floor              string
+}
+
 type HttpResponseAccountInfo struct {
 	Message string
 	Status  string

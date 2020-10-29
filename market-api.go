@@ -19,6 +19,27 @@ func NewMarketAPI(httpManager *HttpManager) *MarketAPI {
 	}
 }
 
+// GetMarkets - Used to get the open and available trading markets at Tokenize along with other meta data.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#market_information
+func (api *MarketAPI) GetMarkets() ([]MarketInfo, error) {
+	resp, err := req.Get(api.endpoint+"/get-markets", api.httpManager.header)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseGetMarkets{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
+}
+
 // GetMarketBuyOrders - Get all currently buy orders in Tokenize specified by market
 func (api *MarketAPI) GetMarketBuyOrders(market string) ([]MarketOrder, error) {
 	if market == "" {
