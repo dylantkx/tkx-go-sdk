@@ -18,5 +18,5 @@ func TestGetAccountBalances(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println("Account balances:", balances[0])
+	fmt.Println("Account balances:", balances)
 }
