@@ -28,3 +28,11 @@ func TestGetAccountBalanceByCCY(t *testing.T) {
 	}
 	fmt.Println("Account balance:", balance)
 }
+
+func TestGetDepositAddress(t *testing.T) {
+	addr, err := apiClient.AccountAPI.GetDepositAddress("BTC")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println("Deposit address:", addr)
+}

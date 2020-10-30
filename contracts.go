@@ -265,3 +265,14 @@ type HttpResponseAccountBalance struct {
 	Status  string
 	Data    *AccountBalance
 }
+
+type HttpResponseGetDepositAddress struct {
+	Message string
+	Status  string
+	Data    *DepositAddress
+}
+
+type DepositAddress struct {
+	Currency string
+	Address  string
+}

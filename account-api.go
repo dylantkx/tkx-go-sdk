@@ -84,3 +84,27 @@ func (api *AccountAPI) GetAccountBalanceByCCY(currency string) (*AccountBalance,
 
 	return json.Data, nil
 }
+
+// GetDepositAddress - Use to retrieve or generate an address for a specified currency.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_deposit_address
+func (api *AccountAPI) GetDepositAddress(currency string) (*DepositAddress, error) {
+	queryParam := req.QueryParam{
+		"currency": currency,
+	}
+	resp, err := req.Get(api.endpoint+"/deposit-address", api.httpManager.header, queryParam)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseGetDepositAddress{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
+}
