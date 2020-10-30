@@ -150,7 +150,8 @@ func (api *OrderAPI) GetMySellOrders(market string) ([]MyOrder, error) {
 // @params:
 // - market [string] (required): The market, eg: "MYR-BTC";
 // - units [float64] (required): The amount of this order;
-// - price [float64] (required): The price of this order;
+// - price [float64] (required): The price of this order.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#place_buy_order
 func (api *OrderAPI) PlaceLimitBuyOrder(market string, units, price float64) (*PlacedOrder, error) {
 	return api.placeBuyOrder(market, "limit", units, price)
 }
@@ -158,7 +159,8 @@ func (api *OrderAPI) PlaceLimitBuyOrder(market string, units, price float64) (*P
 // PlaceMarketBuyOrder - Place a new limit buy order
 // @params:
 // - market [string] (required): The market, eg: "MYR-BTC";
-// - units [float64] (required): The amount of this order;
+// - units [float64] (required): The amount of this order.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#place_buy_order
 func (api *OrderAPI) PlaceMarketBuyOrder(market string, units float64) (*PlacedOrder, error) {
 	return api.placeBuyOrder(market, "market", units, 0)
 }
@@ -167,7 +169,8 @@ func (api *OrderAPI) PlaceMarketBuyOrder(market string, units float64) (*PlacedO
 // @params:
 // - market [string] (required): The market, eg: "MYR-BTC";
 // - units [float64] (required): The amount of this order;
-// - price [float64] (required): The price of this order;
+// - price [float64] (required): The price of this order.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#place_sell_order
 func (api *OrderAPI) PlaceLimitSellOrder(market string, units, price float64) (*PlacedOrder, error) {
 	return api.placeSellOrder(market, "limit", units, price)
 }
@@ -175,7 +178,8 @@ func (api *OrderAPI) PlaceLimitSellOrder(market string, units, price float64) (*
 // PlaceMarketSellOrder - Place a new limit sell order
 // @params:
 // - market [string] (required): The market, eg: "MYR-BTC";
-// - units [float64] (required): The amount of this order;
+// - units [float64] (required): The amount of this order.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#place_sell_order
 func (api *OrderAPI) PlaceMarketSellOrder(market string, units float64) (*PlacedOrder, error) {
 	return api.placeSellOrder(market, "market", units, 0)
 }
