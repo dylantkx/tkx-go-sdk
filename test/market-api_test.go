@@ -93,3 +93,21 @@ func TestGetTradeHistory(t *testing.T) {
 	}
 	fmt.Println("Market history:", history)
 }
+
+func TestGetCandles(t *testing.T) {
+	market := "MYR-BTC"
+	candles, err := apiClient.MarketAPI.GetCandles(market, "1D", -1, -1)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println("Market candles:", candles)
+}
+
+func TestGetRawCandles(t *testing.T) {
+	market := "MYR-BTC"
+	candles, err := apiClient.MarketAPI.GetRawCandles(market, "1D", -1, -1)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println("Market raw candles:", candles)
+}

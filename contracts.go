@@ -114,6 +114,23 @@ type MarketHistoryRecord struct {
 	Total     float64
 }
 
+type HttpResponseGetCandles struct {
+	Message string
+	Status  string
+	Data    []MarketCandleRaw
+}
+
+type MarketCandleRaw = [6]interface{}
+
+type MarketCandle struct {
+	OpenTime int
+	Open     float64
+	Close    float64
+	High     float64
+	Low      float64
+	Volume   float64
+}
+
 type HttpResponseAccountInfo struct {
 	Message string
 	Status  string

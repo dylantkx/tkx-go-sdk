@@ -265,3 +265,86 @@ func (api *MarketAPI) GetTradeHistory(market string, limit int) ([]MarketHistory
 
 	return json.Data, nil
 }
+
+// GetCandles - The Candles endpoint provides chart candles for a specified time frame and period.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_candlestick
+func (api *MarketAPI) GetCandles(market string, resolution string, from, to int) ([]MarketCandle, error) {
+	queryParams := req.QueryParam{
+		"market":     market,
+		"resolution": resolution,
+	}
+
+	if from != -1 {
+		queryParams["from"] = from
+	}
+	if to != -1 {
+		queryParams["to"] = to
+	}
+
+	resp, err := req.Get(api.endpoint+"/candles", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseGetCandles{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	candles := []MarketCandle{}
+	for _, raw := range json.Data {
+		c := MarketCandle{
+			OpenTime: int(raw[0].(float64)),
+			Open:     raw[1].(float64),
+			Close:    raw[2].(float64),
+			High:     raw[3].(float64),
+			Low:      raw[4].(float64),
+			Volume:   raw[5].(float64),
+		}
+		candles = append(candles, c)
+	}
+
+	return candles, nil
+}
+
+// GetRawCandles - Get raw candle data returned from API.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_candlestick
+func (api *MarketAPI) GetRawCandles(market string, resolution string, from, to int) ([]MarketCandleRaw, error) {
+	queryParams := req.QueryParam{
+		"market":     market,
+		"resolution": resolution,
+	}
+
+	if from != -1 {
+		queryParams["from"] = from
+	}
+	if to != -1 {
+		queryParams["to"] = to
+	}
+
+	resp, err := req.Get(api.endpoint+"/candles", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseGetCandles{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	for i := range json.Data {
+		json.Data[i][0] = int(json.Data[i][0].(float64)) // convert OpenTime from float64 to int
+	}
+
+	return json.Data, nil
+}
