@@ -131,6 +131,33 @@ type MarketCandle struct {
 	Volume   float64
 }
 
+type HttpResponseGetOderDetail struct {
+	Message string
+	Status  string
+	Data    *OrderDetail
+}
+
+type OrderDetail struct {
+	OrderID         int
+	Side            string
+	Market          string
+	Status          string
+	Type            string
+	TransactionTime int
+	OriginUnits     float64
+	Price           float64
+	FilledUnits     float64
+	CommissionPaid  float64
+	Fills           []OrderFill
+}
+
+type OrderFill struct {
+	Price           float64
+	Units           float64
+	Commission      float64
+	CommissionAsset string
+}
+
 type HttpResponseAccountInfo struct {
 	Message string
 	Status  string

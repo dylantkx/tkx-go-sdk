@@ -21,6 +21,7 @@ func NewOrderAPI(httpManager *HttpManager) *OrderAPI {
 }
 
 // CancelOrder - Cancel one order
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#cancel_buy_order
 func (api *OrderAPI) CancelOrder(id int) (bool, error) {
 	resp, err := req.Delete(api.endpoint+"/"+strconv.Itoa(id), api.httpManager.header)
 	if err != nil {
@@ -55,6 +56,7 @@ func (api *OrderAPI) GetMyOrders(market string) ([]MyOrder, error) {
 }
 
 // GetMyPendingBuyOrders - Gets all PENDING buy orders of this account
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#current_open_your_buy
 func (api *OrderAPI) GetMyPendingBuyOrders(market string) ([]MyOrder, error) {
 	queryParams := req.QueryParam{
 		"market": market,
@@ -78,6 +80,7 @@ func (api *OrderAPI) GetMyPendingBuyOrders(market string) ([]MyOrder, error) {
 }
 
 // GetMyPendingSellOrders - Gets all PENDING sell orders of this account
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#current_open_your_sell
 func (api *OrderAPI) GetMyPendingSellOrders(market string) ([]MyOrder, error) {
 	queryParams := req.QueryParam{
 		"market": market,
@@ -101,6 +104,7 @@ func (api *OrderAPI) GetMyPendingSellOrders(market string) ([]MyOrder, error) {
 }
 
 // GetMyBuyOrders - Gets all buy orders of this account
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_all_your_buy_orders
 func (api *OrderAPI) GetMyBuyOrders(market string) ([]MyOrder, error) {
 	queryParams := req.QueryParam{
 		"market": market,
@@ -123,7 +127,32 @@ func (api *OrderAPI) GetMyBuyOrders(market string) ([]MyOrder, error) {
 	return json.Data, nil
 }
 
+// GetBuyOrderDetail - Check your buy order by specified id.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#check_buy_order
+func (api *OrderAPI) GetBuyOrderDetail(id int) (*OrderDetail, error) {
+	queryParams := req.QueryParam{
+		"orderId": id,
+	}
+	resp, err := req.Get(api.endpoint+"/buy", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseGetOderDetail{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
+}
+
 // GetMySellOrders - Gets all sell orders of this account
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_all_your_sell_orders
 func (api *OrderAPI) GetMySellOrders(market string) ([]MyOrder, error) {
 	queryParams := req.QueryParam{
 		"market": market,
