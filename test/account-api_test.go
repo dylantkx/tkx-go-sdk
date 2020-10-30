@@ -10,7 +10,7 @@ func TestGetAccountInfo(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println("Account info:", *info)
+	fmt.Println("Account info:", info)
 }
 
 func TestGetAccountBalances(t *testing.T) {

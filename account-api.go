@@ -20,6 +20,7 @@ func NewAccountAPI(httpManager *HttpManager) *AccountAPI {
 }
 
 // GetAccountInfo - Use to get your account information
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#get_account_information
 func (api *AccountAPI) GetAccountInfo() (*AccountInfo, error) {
 	resp, err := req.Get(api.endpoint, api.httpManager.header)
 	if err != nil {
