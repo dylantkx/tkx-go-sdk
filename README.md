@@ -3,7 +3,7 @@
 ## 1. Overview
 A client for Tokenize Public API implemented in Golang
 
-**Note:** This package is under development. Use at your own risk.
+**Note:** This package is under development. Current stable version is v0.2.0
 
 ## 2. How to use
 
