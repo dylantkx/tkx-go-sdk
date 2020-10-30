@@ -158,39 +158,6 @@ type OrderFill struct {
 	CommissionAsset string
 }
 
-type HttpResponseAccountInfo struct {
-	Message string
-	Status  string
-	Data    *AccountInfo
-}
-
-type AccountInfo struct {
-	Email                  string
-	RegId                  string
-	AccountType            string
-	IsMobileNumberVerified int
-	RoleId                 int
-	DigitalTokenTrading    bool
-	FiatTrading            bool
-	MarginTrading          bool
-	DailyWithdrawalLimit   string
-	Message                string
-}
-
-type HttpResponseAccountBalances struct {
-	Message string
-	Status  string
-	Data    []AccountBalance
-}
-
-type AccountBalance struct {
-	Currency  string
-	Balance   float64
-	Available float64
-	Pending   float64
-	Address   string
-}
-
 type HttpResponseMarketOrders struct {
 	Message string
 	Status  string
@@ -258,4 +225,43 @@ type HttpResponseCancelOrder struct {
 	Message string
 	Status  string
 	Data    bool
+}
+
+type HttpResponseAccountInfo struct {
+	Message string
+	Status  string
+	Data    *AccountInfo
+}
+
+type AccountInfo struct {
+	Email                  string
+	RegId                  string
+	AccountType            string
+	IsMobileNumberVerified int
+	RoleId                 int
+	DigitalTokenTrading    bool
+	FiatTrading            bool
+	MarginTrading          bool
+	DailyWithdrawalLimit   string
+	Message                string
+}
+
+type HttpResponseAccountBalances struct {
+	Message string
+	Status  string
+	Data    []AccountBalance
+}
+
+type AccountBalance struct {
+	Currency  string
+	Balance   float64
+	Available float64
+	Pending   float64
+	Address   string
+}
+
+type HttpResponseAccountBalance struct {
+	Message string
+	Status  string
+	Data    *AccountBalance
 }

@@ -20,3 +20,11 @@ func TestGetAccountBalances(t *testing.T) {
 	}
 	fmt.Println("Account balances:", balances)
 }
+
+func TestGetAccountBalanceByCCY(t *testing.T) {
+	balance, err := apiClient.AccountAPI.GetAccountBalanceByCCY("BTC")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println("Account balance:", balance)
+}
