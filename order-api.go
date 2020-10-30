@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/imroc/req"
 	"strconv"
+	"sync"
 )
 
 // OrderAPI - OrderAPI struct
@@ -43,47 +44,31 @@ func (api *OrderAPI) CancelOrder(id int) (bool, error) {
 
 // GetMyOrders - Get all orders of this account
 func (api *OrderAPI) GetMyOrders(market string) ([]MyOrder, error) {
-	ch1 := make(chan interface{}, 1)
-	ch2 := make(chan interface{}, 1)
+	var allOrders []MyOrder
+	var err error
+	var wg sync.WaitGroup
+
+	wg.Add(1)
 	go func() {
-		defer close(ch1)
-		orders, err := api.GetMyBuyOrders(market)
-		if err == nil {
-			ch1 <- orders
-		} else {
-			ch1 <- err
-		}
-	}()
-	go func() {
-		defer close(ch2)
-		orders, err := api.GetMySellOrders(market)
-		if err == nil {
-			ch2 <- orders
-		} else {
-			ch2 <- err
-		}
+		defer wg.Done()
+		orders, e := api.GetMyBuyOrders(market)
+		allOrders = append(allOrders, orders...)
+		err = e
 	}()
 
-	firstResult, secondResult := <-ch1, <-ch2
-	combined := []MyOrder{}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		orders, e := api.GetMySellOrders(market)
+		allOrders = append(allOrders, orders...)
+		err = e
+	}()
+	wg.Wait()
 
-	switch firstResult.(type) {
-	case error:
-		return []MyOrder{}, firstResult.(error)
-	case []MyOrder:
-		combined = append(combined, firstResult.([]MyOrder)...)
-		break
+	if err != nil {
+		return []MyOrder{}, err
 	}
-
-	switch secondResult.(type) {
-	case error:
-		return []MyOrder{}, secondResult.(error)
-	case []MyOrder:
-		combined = append(combined, secondResult.([]MyOrder)...)
-		break
-	}
-
-	return combined, nil
+	return allOrders, nil
 }
 
 // GetMyPendingBuyOrders - Gets all PENDING buy orders of this account
