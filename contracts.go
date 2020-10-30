@@ -131,7 +131,7 @@ type MarketCandle struct {
 	Volume   float64
 }
 
-type HttpResponseGetOderDetail struct {
+type HttpResponseGetOrderDetail struct {
 	Message string
 	Status  string
 	Data    *OrderDetail

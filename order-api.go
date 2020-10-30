@@ -138,7 +138,7 @@ func (api *OrderAPI) GetBuyOrderDetail(id int) (*OrderDetail, error) {
 		return nil, err
 	}
 
-	json := &HttpResponseGetOderDetail{}
+	json := &HttpResponseGetOrderDetail{}
 	parsingError := resp.ToJSON(&json)
 	if parsingError != nil {
 		return nil, parsingError
@@ -163,6 +163,30 @@ func (api *OrderAPI) GetMySellOrders(market string) ([]MyOrder, error) {
 	}
 
 	json := &HttpResponseMyOrders{}
+	parsingError := resp.ToJSON(&json)
+	if parsingError != nil {
+		return nil, parsingError
+	}
+
+	if json.Status != "success" {
+		return nil, errors.New(json.Message)
+	}
+
+	return json.Data, nil
+}
+
+// GetSellOrderDetail - Check your sell order by specified id.
+// Reference: https://tokenizexchange.zendesk.com/hc/en-gb/articles/360022521593-Developer-s-Guide-API#check_sell_order
+func (api *OrderAPI) GetSellOrderDetail(id int) (*OrderDetail, error) {
+	queryParams := req.QueryParam{
+		"orderId": id,
+	}
+	resp, err := req.Get(api.endpoint+"/sell", api.httpManager.header, queryParams)
+	if err != nil {
+		return nil, err
+	}
+
+	json := &HttpResponseGetOrderDetail{}
 	parsingError := resp.ToJSON(&json)
 	if parsingError != nil {
 		return nil, parsingError

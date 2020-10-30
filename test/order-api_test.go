@@ -82,8 +82,16 @@ func TestCancelOrder(t *testing.T) {
 	fmt.Println("Order is cancelled?", ok)
 }
 
-func TestGetOrderDetail(t *testing.T) {
+func TestGetBuyOrderDetail(t *testing.T) {
 	order, err := apiClient.OrderAPI.GetBuyOrderDetail(2226383)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println("Order: ", order)
+}
+
+func TestGetSellOrderDetail(t *testing.T) {
+	order, err := apiClient.OrderAPI.GetSellOrderDetail(2226384)
 	if err != nil {
 		t.Error(err)
 	}
