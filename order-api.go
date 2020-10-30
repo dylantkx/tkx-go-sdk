@@ -43,16 +43,47 @@ func (api *OrderAPI) CancelOrder(id int) (bool, error) {
 
 // GetMyOrders - Get all orders of this account
 func (api *OrderAPI) GetMyOrders(market string) ([]MyOrder, error) {
-	// TODO: Find a way to execute these two requests concurrently
-	b, err1 := api.GetMyBuyOrders(market)
-	if err1 != nil {
-		return nil, err1
+	ch1 := make(chan interface{}, 1)
+	ch2 := make(chan interface{}, 1)
+	go func() {
+		defer close(ch1)
+		orders, err := api.GetMyBuyOrders(market)
+		if err == nil {
+			ch1 <- orders
+		} else {
+			ch1 <- err
+		}
+	}()
+	go func() {
+		defer close(ch2)
+		orders, err := api.GetMySellOrders(market)
+		if err == nil {
+			ch2 <- orders
+		} else {
+			ch2 <- err
+		}
+	}()
+
+	firstResult, secondResult := <-ch1, <-ch2
+	combined := []MyOrder{}
+
+	switch firstResult.(type) {
+	case error:
+		return []MyOrder{}, firstResult.(error)
+	case []MyOrder:
+		combined = append(combined, firstResult.([]MyOrder)...)
+		break
 	}
-	s, err2 := api.GetMySellOrders(market)
-	if err2 != nil {
-		return nil, err2
+
+	switch secondResult.(type) {
+	case error:
+		return []MyOrder{}, secondResult.(error)
+	case []MyOrder:
+		combined = append(combined, secondResult.([]MyOrder)...)
+		break
 	}
-	return append(b, s...), nil
+
+	return combined, nil
 }
 
 // GetMyPendingBuyOrders - Gets all PENDING buy orders of this account
